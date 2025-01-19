@@ -7,7 +7,7 @@ export default function ReceiptCapture() {
 
   const [photo, setPhoto] = useState<any>(null);
   const [hasPermission, setHasPermission] = useState<any>(false);
-  const [photoData, setPhotoData] = useState<any>(null);
+  const [extractedText, setExtractedText] = useState<any>("");
 
   // Request camera permission.
   const requestPermissions = async () => {
@@ -55,6 +55,25 @@ export default function ReceiptCapture() {
   // Have google OCR analyze photo and store parsed data.
   // ADD CODE
 
+  const performOCR = (file) => {
+    let myHeaders = new Headers();
+    myHeaders.append(
+      "apikey", "2afc9ca4d5708a294abd1baeecda3922ce373ced"
+    );
+    myHeaders.append(
+      "Content-Type", "multipart/form-data"
+    );
+
+    let raw = file;
+    let requestOptions = {
+      method: "POST",
+      redirect: "follow",
+      headers: myHeaders,
+      body: raw,
+    };
+
+  }
+
 
   // Upload selected receipt to freee会計 with parsed data.
   // const uploadReceipt = () => {
@@ -82,7 +101,7 @@ export default function ReceiptCapture() {
       <Button title="Select Receipt from Gallery" onPress={openGallery} />
       {photo && <Image source={{ uri : photo}} style={{ width: 200, height: 200}} />}
       {/* Add button below that appears below selected photo to analyze by google OCR */}
-      {/* <Button title="Anaylze receipt" onPress={googleAnalyze} /> */}
+      {/* <Button title="Anaylze receipt" onPress={performOCR} /> */}
 
     </View>
   );
