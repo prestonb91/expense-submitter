@@ -7,7 +7,10 @@ export default function ReceiptCapture() {
 
   const [photo, setPhoto] = useState<any>(null);
   const [hasPermission, setHasPermission] = useState<any>(false);
-  const [extractedText, setExtractedText] = useState<any>("");
+  const [formData, setFormData] = useState<any>({
+
+  });
+  // const [extractedText, setExtractedText] = useState<any>("");
 
   // Request camera permission.
   const requestPermissions = async () => {
@@ -52,30 +55,7 @@ export default function ReceiptCapture() {
     }
   };
 
-  // Have google OCR analyze photo and store parsed data.
-  // ADD CODE
-
-  const performOCR = (file) => {
-    let myHeaders = new Headers();
-    myHeaders.append(
-      "apikey", "2afc9ca4d5708a294abd1baeecda3922ce373ced"
-    );
-    myHeaders.append(
-      "Content-Type", "multipart/form-data"
-    );
-
-    let raw = file;
-    let requestOptions = {
-      method: "POST",
-      redirect: "follow",
-      headers: myHeaders,
-      body: raw,
-    };
-
-  }
-
-
-  // Upload selected receipt to freee会計 with parsed data.
+    // Upload selected receipt to freee会計.
   // const uploadReceipt = () => {
   //   if (!photo) return Alert.alert('Error', 'Please take a photo first')
 
@@ -91,10 +71,27 @@ export default function ReceiptCapture() {
   //   } catch (err) {
   //     Alert.alert('Upload Failed', 'Please try again.');
   //   }
-
   // }
 
-  // TODO: Add parsed data from receipt into input to send to freee会計.
+  // FUTURE FEATURE: Have google OCR analyze photo and store parsed data.
+  // const performOCR = (file) => {
+  //   let myHeaders = new Headers();
+  //   myHeaders.append(
+  //     // "apikey", INSERT APIKEY
+  //   );
+  //   myHeaders.append(
+  //     "Content-Type", "multipart/form-data"
+  //   );
+
+  //   let raw = file;
+  //   let requestOptions = {
+  //     method: "POST",
+  //     redirect: "follow",
+  //     headers: myHeaders,
+  //     body: raw,
+  //   };
+  // }
+
   return (
     <View style={styles.container}>
       <Button title="Take Receipt Photo" onPress={takePhoto} />
