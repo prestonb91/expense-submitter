@@ -1,48 +1,60 @@
 import { Text, View , StyleSheet, Button, Image, Alert} from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import * as ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
 export default function ReceiptCapture() {
 
   const [photo, setPhoto] = useState<any>(null);
-  const [galleryPhoto, setGalleryPhoto] = useState<any>(null);
+  const [hasPermission, setHasPermission] = useState<any>(false);
+  const [photoData, setPhotoData] = useState<any>(null);
 
-  // Open the camera.
-  const takePhoto = () => {
-    ImagePicker.launchCamera({
-      mediaType: 'photo'
-    },
-    response => {
-      if (response.assets) {
-        setPhoto(response.assets[0].uri);
+  // Request camera permission.
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Camera permission is required.');
+    } else {
+      setHasPermission(status === 'granted');
+    }
+  };
+
+  // Open the camera after asking for permission.
+  const takePhoto = async () => {
+
+    requestPermissions();
+
+    if (hasPermission) {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: 'images',
+        aspect: [4, 3],
+      });
+  
+      console.log("Photo select: ", result);
+  
+      if (!result.canceled) {
+        setPhoto(result.assets[0].uri);
       }
-    });
+    };
   };
 
   // Open image gallery.
-  // const openGallery = useCallback(() => {
+  const openGallery = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images',
+      aspect: [4, 3],
+    });
 
-  //   const options = {
-  //     selectionLimit: 1, 
-  //     mediaType: 'photo',
-  //     includeBase64: true,
-  //   }
+    console.log("Gallery select: ", result);
 
-  //   ImagePicker.launchImageLibrary(options, res => {
-  //     if(res.didCancel) {
-  //       console.log('User cancelled')
-  //     } else if(resizeBy.errorCode) {
-  //       console.log('ImagePickerError: ', resizeBy.errorMessage)
-  //     } else {
-  //       setGalleryPhoto(res);
-  //       sendImageToAPI(resizeBy.assets[0].base64, resizeBy.assets[0].type)
-  //     }
-  //   })
-  // }, [])
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    }
+  };
 
-  // Parse data from receipt.
+  // Have google OCR analyze photo and store parsed data.
   // ADD CODE
+
 
   // Upload selected receipt to freee会計 with parsed data.
   // const uploadReceipt = () => {
@@ -66,9 +78,12 @@ export default function ReceiptCapture() {
   // TODO: Add parsed data from receipt into input to send to freee会計.
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Capture screen</Text>
-      {photo && <Image source={{ uri : photo}} style={{ width: 200, height: 200}} />}
       <Button title="Take Receipt Photo" onPress={takePhoto} />
+      <Button title="Select Receipt from Gallery" onPress={openGallery} />
+      {photo && <Image source={{ uri : photo}} style={{ width: 200, height: 200}} />}
+      {/* Add button below that appears below selected photo to analyze by google OCR */}
+      {/* <Button title="Anaylze receipt" onPress={googleAnalyze} /> */}
+
     </View>
   );
 }
@@ -83,4 +98,4 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
   }
-});
+})
