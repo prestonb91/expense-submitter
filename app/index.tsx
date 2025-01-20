@@ -6,30 +6,21 @@ import * as AuthSession from 'expo-auth-session';
 
 export default function Index() {
   const [authData, setAuthData] = useState<any>(null);
-
-// freee login
-// TODO: Update based on below documentation
-// https://docs.expo.dev/versions/latest/sdk/auth-session/
-const loginWithFreee = async () => {
-  try {
-    
-    const authUrl = `https://accounts.secure.freee.co.jp/public_api/authorize?client_id=${authConfig.clientId}&redirect_uri=${encodeURIComponent(authConfig.redirectUrl)}&response_type=token&scope=read write`;
-
-    const result = await AuthSession.promptAsync({ authUrl });
-    
-    if (result.type === 'success') {
-      console.log("Auth Data: ", result.params);
-      setAuthData(result.params);
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      clientId: authConfig.clientId,
+      redirectUri: authConfig.redirectUrl,
+      scopes: ['read', 'write'],
+    },
+    {
+      authorizationEndpoint: authConfig.discovery.authorizationEndpoint,
+      tokenEndpoint: authConfig.discovery.tokenEndpoint
     }
-    
-  } catch (err) {
-    console.error("Login error:", err);
-  }
-}
+  );
 
   return (
     <View style={styles.container}>
-      <Button title="Login with freee" onPress={loginWithFreee} />
+      <Button title="Login with freee" onPress={() => promptAsync()} />
       <Link href={"/receipt_capture"} style={styles.button}>
         Photo capture a receipt.
       </Link>
