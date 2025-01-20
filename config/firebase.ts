@@ -1,12 +1,12 @@
-// import * as firebase from 'firebase';
-// import Env from "./env";
+import * as firebase from 'firebase';
+import env from "./env";
 
-// firebase.initializeApp({
-//     apiKey: Env['FIREBASE_API_KEY'],
-//     authDomain: Env['FIREBASE_AUTH_DOMAIN'],
-//     databaseURL: Env['FIREBASE_DATABASE_URL'],
-//     projectId: Env['FIREBASE_PROJECT_ID'],
-//     storageBucket: Env['FIREBASE_STORAGE_BUCKET'],
-//     messagingSenderId: Env['FIREBASE_MESSAGING_SENDER_ID']
-//   });
-//   export default firebase;
+firebase.initializeApp({
+    apiKey: env['FIREBASE_API_KEY'],
+    authDomain: env['FIREBASE_AUTH_DOMAIN'],
+    databaseURL: env['FIREBASE_DATABASE_URL'],
+    projectId: env['FIREBASE_PROJECT_ID'],
+    storageBucket: env['FIREBASE_STORAGE_BUCKET'],
+    messagingSenderId: env['FIREBASE_MESSAGING_SENDER_ID']
+  });
+  export default firebase;
