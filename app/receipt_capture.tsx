@@ -1,5 +1,5 @@
 import { Text, View , StyleSheet, Button, Image, Alert} from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { GOOGLE_CLOUD_VISION_API_KEY } from '@/config/secret';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
@@ -93,6 +93,8 @@ export default function ReceiptCapture() {
     }
 
     try {
+
+      // Convert to Base64
       const response = await fetch(photo);
       const blob = await response.blob();
 
@@ -100,31 +102,31 @@ export default function ReceiptCapture() {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
-        const base64Image = reader.result?.toString().split(",")[1];
+        const base64Image = reader.result?.toString().split(",")[1]; // Remove metadata
 
+      const body = JSON.stringify({
+        requests: [
+          {
+            image: { content: base64Image },
+            features: [{ type: "TEXT_DETECTION" }],
+          },
+        ],
+      });
 
-        const body = JSON.stringify({
-          requests: [
-            {
-              image: { content: base64Image },
-              features: [{ type: "TEXT_DETECTION" }],
-            },
-          ],
+        // Send request to Google Vision API
+        const visionURL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_CLOUD_VISION_API_KEY}`;
+        const res = await fetch(visionURL, {
+          method: "POST",
+          body,
+          headers: { "Content-Type": "application/json" },
         });
 
-          // Send request to Google Vision API
-          const visionURL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_CLOUD_VISION_API_KEY}`;
-          const res = await fetch(visionURL, {
-            method: "POST",
-            body,
-            headers: { "Content-Type": "application/json" },
-          });
+        const result = await res.json();
+        const text = result.responses?.[0]?.fullTextAnnotation?.text || "No text found";
 
-          const result = await res.json();
-          const text = result.responses?.[0]?.fullTextAnnotation?.text || "No text found";
+        setExtractedText(text);
+      }
 
-          setExtractedText(text);
-        };
       } catch (error) {
         console.error("OCR Error:", error);
         Alert.alert("OCR Error", "Failed to analyze receipt.");
