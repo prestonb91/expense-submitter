@@ -32,8 +32,6 @@ export default function ReceiptCapture() {
         aspect: [4, 3],
       });
   
-      console.log("Photo select: ", result);
-  
       if (!result.canceled) {
         setPhoto(result.assets[0].uri);
       }
@@ -47,12 +45,10 @@ export default function ReceiptCapture() {
       base64: true,
       aspect: [4, 3],
     });
-
-    console.log("Gallery select: ", result);
-
-    if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
-    }
+    
+      if (!result.canceled) {
+        setPhoto(result.assets[0].uri);
+      }
   };
 
   // TODO: Creates unique image ID or blob with uuid and uses XHR to send request to Firebase storage to upload.  
@@ -94,21 +90,14 @@ export default function ReceiptCapture() {
 
     try {
 
-      // Convert to Base64
-      const response = await fetch(photo);
-      const blob = await response.blob();
-
-      // Convert to Base64
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = async () => {
-        const base64Image = reader.result?.toString().split(",")[1]; // Remove metadata
+      // Remove metadata from base64
+      const base64Image = photo.toString().split(",")[1];
 
       const body = JSON.stringify({
         requests: [
           {
             image: { content: base64Image },
-            features: [{ type: "TEXT_DETECTION" }],
+            features: { type: "TEXT_DETECTION" },
           },
         ],
       });
@@ -125,7 +114,6 @@ export default function ReceiptCapture() {
         const text = result.responses?.[0]?.fullTextAnnotation?.text || "No text found";
 
         setExtractedText(text);
-      }
 
       } catch (error) {
         console.error("OCR Error:", error);
@@ -158,7 +146,7 @@ export default function ReceiptCapture() {
       {photo && <Image source={{ uri : photo}} style={{ width: 200, height: 200}} />}
       {/* Add button below that appears below selected photo to analyze by google OCR */}
       <Button title="Anaylze receipt" onPress={performOCR} />
-      <Text>{extractedText}</Text>
+      <Text style={{backgroundColor: "white"}}>{extractedText}</Text>
 
     </View>
   );
