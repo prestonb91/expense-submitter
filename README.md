@@ -1,6 +1,19 @@
-# Welcome to your Expo app 👋
+# Expense Submitter
+A mobile app that captures photos with text-detection using Google Cloud Vision. 
+Used to upload receipts and expenses to 3rd party application. 
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Tech Stack
+### Frontend
+Typescript | React Native | Expo Go 
+
+### Backend
+Node.js | Express
+
+### Database 
+Firebase Cloud Storage
+
+### APIs
+Google Cloud Vision
 
 ## Get started
 
