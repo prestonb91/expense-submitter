@@ -21,8 +21,8 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Button title="Login with freee" onPress={() => promptAsync()} />
-      <Link href={"/receipt_capture"} style={styles.button}>
-        Photo capture a receipt.
+      <Link href={"/home"} style={styles.button}>
+        Homepage
       </Link>
     </View>
   );

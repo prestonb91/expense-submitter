@@ -122,7 +122,6 @@ export default function ReceiptCapture() {
       <Button title="Take Receipt Photo" onPress={takePhoto} />
       <Button title="Select Receipt from Gallery" onPress={openGallery} />
       {photo && <Image source={{ uri : photo}} style={{ width: 200, height: 200}} />}
-      {/* Add button below that appears below selected photo to analyze by google OCR */}
       <Button title="Anaylze receipt" onPress={performOCR} />
       <Text style={{backgroundColor: "white"}}>{extractedText}</Text>
 

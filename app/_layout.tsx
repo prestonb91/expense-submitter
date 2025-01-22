@@ -9,6 +9,9 @@ export default function RootLayout() {
       <Stack.Screen name="receipt_capture" options={{
         headerTitle: "Receipt Capture"
       }}/>
+      <Stack.Screen name="home" options={{
+        headerTitle: "Home"
+      }}/>
     </Stack>
   )
 }
