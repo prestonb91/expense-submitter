@@ -9,9 +9,6 @@ export default function ReceiptCapture() {
   const [photo, setPhoto] = useState<any>(null);
   const [hasPermission, setHasPermission] = useState<any>(false);
   const [extractedText, setExtractedText] = useState<any>("");
-  const [expenseFormData, setExpenseFormData] = useState<any>({
-    
-  })
 
   // Request camera permission.
   const requestPermissions = async () => {
